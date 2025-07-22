@@ -15,8 +15,20 @@ const App = () => {
 
   const addTask = () => {
     if (input.trim() === "") return;
-    setTasks([...tasks, input.trim()]);
+    const newTask = { text: input.trim(), completed: false };
+    setTasks([...tasks, newTask]);
     setInput("");
+  };
+
+  const toggleComplete = (index) => {
+    const updated = [...tasks];
+    updated[index].completed = !updated[index].completed;
+    setTasks(updated);
+  };
+
+  const deleteTask = (index) => {
+    const updated = tasks.filter((_, i) => i !== index);
+    setTasks(updated);
   };
 
   return (
@@ -28,16 +40,25 @@ const App = () => {
       />
       <button onClick={addTask}>Add</button>
 
-      {}
-      {tasks.length > 0 ? (
-        <ul>
-          {tasks.map((task, index) => (
-            <li key={index}>{task}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No tasks yet.</p>
-      )}
+      <ul style={{ marginTop: "1rem" }}>
+        {tasks.length === 0 && <p>No tasks yet.</p>}
+        {tasks.map((task, index) => (
+          <li key={index} style={{ marginBottom: "0.5rem" }}>
+            <span
+              onClick={() => toggleComplete(index)}
+              style={{
+                cursor: "pointer",
+                textDecoration: task.completed ? "line-through" : "none",
+                color: task.completed ? "gray" : "white",
+                marginRight: "1rem"
+              }}
+            >
+              {task.text}
+            </span>
+            <button onClick={() => deleteTask(index)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
